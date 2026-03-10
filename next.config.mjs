@@ -2,7 +2,8 @@
 const nextConfig = {
   output: 'export',
   images: { unoptimized: true },
-  transpilePackages: ['undici', 'firebase'], // Forces Next to fix the syntax during build
+  // This tells the compiler to handle modern JS in these packages
+  transpilePackages: ['undici', '@firebase/auth'],
 };
 
 export default nextConfig;
