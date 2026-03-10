@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // This is the magic line
-  images: {
-    unoptimized: true, // Required for static export
-  },
+  output: 'export',
+  images: { unoptimized: true },
+  transpilePackages: ['undici', 'firebase'], // Forces Next to fix the syntax during build
 };
 
 export default nextConfig;
