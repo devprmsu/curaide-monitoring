@@ -2,8 +2,8 @@
 const nextConfig = {
   output: 'export',
   images: { unoptimized: true },
-  // This tells the compiler to handle modern JS in these packages
-  transpilePackages: ['undici', '@firebase/auth'],
+  // This is the critical part for the undici error
+  transpilePackages: ['undici', 'firebase', '@firebase/auth'],
 };
 
 export default nextConfig;
