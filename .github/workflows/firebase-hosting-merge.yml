@@ -1,7 +1,9 @@
 name: Deploy to Firebase Hosting on merge
 
+# This 'on' section must start at the very edge (no spaces)
 on:
   push:
+    # There must be exactly 2 spaces before 'branches'
     branches:
       - main
 
