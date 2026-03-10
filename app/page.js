@@ -2,40 +2,56 @@
 import React, { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { ref, onValue } from "firebase/database";
-
-// Import directly from the icons folder to prevent "undefined" errors
-import Heart from "lucide-react/dist/esm/icons/heart";
-import Activity from "lucide-react/dist/esm/icons/activity";
+// Using standard imports - if this fails, we will remove icons entirely to test
+import { Heart, Activity } from "lucide-react";
 
 export default function Dashboard() {
   const [data, setData] = useState({ bpm: 0, spo2: 0 });
-  const [mounted, setMounted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setMounted(true); // Signal that we are now in the browser
-    
-    const statsRef = ref(db, "sensor_data"); 
+    setIsClient(true);
+    const statsRef = ref(db, "sensor_data");
     const unsubscribe = onValue(statsRef, (snapshot) => {
       const val = snapshot.val();
-      if (val) {
-        setData({
-          bpm: val.bpm || 0,
-          spo2: val.spo2 || 0
-        });
-      }
+      if (val) setData({ bpm: val.bpm || 0, spo2: val.spo2 || 0 });
     });
-
     return () => unsubscribe();
   }, []);
 
-  // During the build (server-side), this will prevent the crash
-  if (!mounted) {
-    return <div style={{ textAlign: 'center', padding: '50px' }}>Loading Curaide...</div>;
-  }
+  // Prevent white screen by showing a loading state until the browser is ready
+  if (!isClient) return <div style={{ padding: "20px" }}>Loading Dashboard...</div>;
 
   return (
-    <main style={{ padding: "2rem", textAlign: "center" }}>
-       {/* Rest of your UI code with <Heart /> and <Activity /> */}
+    <main style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "2rem" }}>
+      <h1 style={{ color: "#1e293b" }}>Curaide Real-Time Monitoring</h1>
+      
+      <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
+        {/* Heart Rate Card */}
+        <div style={cardStyle}>
+          <Heart color="#ef4444" size={48} />
+          <h2>{data.bpm} <span style={unitStyle}>BPM</span></h2>
+          <p>Heart Rate</p>
+        </div>
+
+        {/* SpO2 Card */}
+        <div style={cardStyle}>
+          <Activity color="#3b82f6" size={48} />
+          <h2>{data.spo2}<span style={unitStyle}>%</span></h2>
+          <p>Blood Oxygen</p>
+        </div>
+      </div>
     </main>
   );
 }
+
+const cardStyle = {
+  background: "white",
+  padding: "30px",
+  borderRadius: "15px",
+  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+  width: "200px",
+  textAlign: "center"
+};
+
+const unitStyle = { fontSize: "1rem", color: "#64748b", marginLeft: "5px" };
