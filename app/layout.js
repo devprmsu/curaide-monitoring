@@ -1,5 +1,3 @@
-import "./globals.css"; // Ensure you have a globals.css or remove this line
-
 export const metadata = {
   title: "Curaide | Health Monitoring",
   description: "Real-time SpO2 and Heart Rate Monitoring",
